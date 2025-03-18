@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>পোস্ট</title>
+</head>
+<body>
+    <h1>ব্লগ পোস্ট</h1>
+    <button id="postBtn">পোস্ট করুন</button>
+    <div id="posts"></div>
+
+    <script>
+        // লোড হওয়া পোস্টগুলো দেখানোর জন্য
+        window.onload = function() {
+            let posts = JSON.parse(localStorage.getItem('posts')) || [];
+
+            const postsDiv = document.getElementById('posts');
+            postsDiv.innerHTML = ''; // পোস্টগুলোর জায়গা ফাঁকা করা
+
+            posts.forEach(post => {
+                const postDiv = document.createElement('div');
+                postDiv.innerHTML = `
+                    <h2>${post.title}</h2>
+                    <p>${post.content}</p>
+                    <p><small>পোস্টের তারিখ: ${post.date}</small></p>
+                    <button onclick="likePost('${post.date}')">লাইক</button>
+                    <button onclick="commentPost('${post.date}')">কমেন্ট</button>
+                    <div id="comments-${post.date}"></div>
+                `;
+                postsDiv.appendChild(postDiv);
+            });
+        }
+
+        // পোস্ট পেজে রিডিরেক্ট করতে
+        document.getElementById('postBtn').onclick = function() {
+            window.location.href = 'post.html';
+        }
+
+        // লাইক ফাংশন
+        function likePost(postDate) {
+            let posts = JSON.parse(localStorage.getItem('posts')) || [];
+            posts.forEach(post => {
+                if (post.date === postDate) {
+                    post.likes = post.likes ? post.likes + 1 : 1;
+                }
+            });
+
+            localStorage.setItem('posts', JSON.stringify(posts));
+            alert('লাইক হয়েছে!');
+        }
+
+        // কমেন্ট ফাংশন
+        function commentPost(postDate) {
+            const comment = prompt('আপনার কমেন্ট লিখুন:');
+            if (comment) {
+                let posts = JSON.parse(localStorage.getItem('posts')) || [];
+                posts.forEach(post => {
+                    if (post.date === postDate) {
+                        post.comments = post.comments || [];
+                        post.comments.push(comment);
+                    }
+                });
+
+                localStorage.setItem('posts', JSON.stringify(posts));
+                alert('কমেন্ট হয়েছে!');
+            }
+        }
+    </script>
+</body>
+</html>
