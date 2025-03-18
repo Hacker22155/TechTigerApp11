@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>পোস্ট করুন</title>
+</head>
+<body>
+    <h1>নতুন পোস্ট করুন</h1>
+    <form id="postForm">
+        <input type="text" id="title" placeholder="পোস্টের শিরোনাম" required>
+        <textarea id="content" placeholder="পোস্টের বিস্তারিত" required></textarea>
+        <button type="submit">পোস্ট করুন</button>
+    </form>
+
+    <script>
+        document.getElementById('postForm').onsubmit = function(e) {
+            e.preventDefault();
+
+            const title = document.getElementById('title').value;
+            const content = document.getElementById('content').value;
+
+            // নতুন পোস্ট ডেটা
+            const postData = {
+                title: title,
+                content: content,
+                date: new Date().toLocaleString(), // পোস্টের তারিখ
+                likes: 0,
+                comments: []
+            };
+
+            // ডেটা সেভ করা
+            let posts = JSON.parse(localStorage.getItem('posts')) || [];
+            posts.push(postData);
+            localStorage.setItem('posts', JSON.stringify(posts));
+
+            alert('পোস্ট সেভ হয়েছে!');
+            window.location.href = 'index.html';
+        };
+    </script>
+</body>
+</html>
